@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+
+    <changeSet id="default-schema-creation" author="Dmitri">
+        <createTable tableName="Customer">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="registrationCode" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fullName" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telephone" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="Product">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="skuCode" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unitPrice" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="Orders">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="submissionDate" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customerId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="Orders"
+                                 baseColumnNames="customerId"
+                                 referencedTableName="Customer"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Orders_Customer"
+                                 onDelete="CASCADE"
+        />
+
+        <createTable tableName="OrderLine">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="orderId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="productId" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="OrderLine"
+                                 baseColumnNames="orderId"
+                                 referencedTableName="Orders"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_OrderLine_Order"
+                                 onDelete="CASCADE"
+        />
+
+        <addForeignKeyConstraint baseTableName="OrderLine"
+                                 baseColumnNames="productId"
+                                 referencedTableName="Product"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_OrderLine_Product"
+                                 onDelete="CASCADE"
+        />
+
+    </changeSet>
+
+</databaseChangeLog>
